@@ -24,12 +24,10 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     OPTION1 = 'Student'
     OPTION2 = 'Teacher'
-    OPTION3 = '-------'
 
     CHOICES = [
         (OPTION1, 'Child'),
         (OPTION2, 'Men'),
-        (OPTION3, '-----')
     ]
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=20, unique=True)
@@ -40,7 +38,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(
         max_length=10,
         choices=CHOICES,
-        default=OPTION3,
+        default=OPTION2,
     )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
