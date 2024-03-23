@@ -38,7 +38,7 @@ class Question_Set(models.Model):
     is_deleted = models.BooleanField(default=False)
 
 
-class Studen_Result(models.Model):
+class Student_Result(models.Model):
     result_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     score = models.FloatField(default=0)
     date = models.DateTimeField(auto_now_add=True)
