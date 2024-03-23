@@ -24,21 +24,21 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     OPTION1 = 'Student'
     OPTION2 = 'Teacher'
+    OPTION3 = 'Admin'
 
     CHOICES = [
-        (OPTION1, 'Child'),
-        (OPTION2, 'Men'),
+        (OPTION1, 'Student'),
+        (OPTION2, 'Teacher'),
+        (OPTION3, 'Admin'),
     ]
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=20, unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
     full_name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='users_image/')
     user_type = models.CharField(
         max_length=10,
         choices=CHOICES,
-        default=OPTION2,
+        default=OPTION1,
     )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -48,8 +48,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.username
