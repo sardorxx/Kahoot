@@ -45,7 +45,6 @@ INSTALLED_APPS = [
 
     # apps
     'account.apps.AccountConfig',
-    'quize.apps.QuizeConfig',
 ]
 
 MIDDLEWARE = [
