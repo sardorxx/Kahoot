@@ -13,7 +13,7 @@ class TeacherSubjectList(generics.CreateAPIView):
     queryset = Teacher_Subject.objects.all()
     serializer_class = TeacherSubjectSerializer
 
-    def post(self, request):
+    def create_subject(self, request):
         serializer = TeacherSubjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -28,4 +28,4 @@ class TeacherSubjectList(generics.CreateAPIView):
             if teacher.subject == data['subject']:
                 raise serializers.ValidationError('Subject Already Exists')
         return queryset
-# asa
+
