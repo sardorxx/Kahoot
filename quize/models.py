@@ -8,7 +8,7 @@ from account.models import CustomUser
 # Create your models here.
 class Teacher_Subject(models.Model):
     sub_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    subject = models.CharField(max_length=50)
+    subject = models.CharField(max_length=50, unique=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -28,7 +28,7 @@ class Question_Set(models.Model):
         (OPTION4, 'Hard'),
     ]
     qs_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='Question_Sets')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='Question_Sets')
     created_at = models.DateTimeField(auto_now_add=True)
     level = models.CharField(
         max_length=10,
