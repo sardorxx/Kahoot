@@ -59,7 +59,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class TeacherSettings(models.Model):
     teacher_settings_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    teacher = models.ForeignKey(CustomUser, on_delete=models)
+    teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     join_date = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
