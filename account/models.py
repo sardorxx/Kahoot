@@ -53,8 +53,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name', 'user_type']
 
-    def __str__(self):
-        return self.username
 
 
 class TeacherSettings(models.Model):
