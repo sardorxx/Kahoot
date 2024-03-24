@@ -28,3 +28,4 @@ class TeacherSubjectList(generics.CreateAPIView):
             if teacher.subject == data['subject']:
                 raise serializers.ValidationError('Subject Already Exists')
         return queryset
+# asa
