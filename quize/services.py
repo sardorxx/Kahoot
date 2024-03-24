@@ -1,15 +1,21 @@
-from django.db.models import Q
-from rest_framework import validators, serializers
+from rest_framework import serializers
 
+from account.models import CustomUser
 from quize.models import Teacher_Subject
-from quize.serializers import TeacherSubjectSerializer
 
 
-# def validate_teacher_subject(data):
-#     queryset = Teacher_Subject.objects.get(Q(user_type=data['user_type']) & Q(user_email=data['user_email'])).all()
-#     for teacher in queryset:
-#         if teacher.subject == data['subject']:
-#             raise serializers.ValidationError('Subject Already Exists')
-#     return data
+def validate_unique_subject(data):
+    """
+    Validate that the subject is unique for each user_email.
+    """
+    user_email = data['user_email']
+    subject = data['subject']
+    user = CustomUser.objects.get(email=user_email)
 
-
+    if (not Teacher_Subject.objects.filter(subject=subject, user_email=user_email).exists() and
+            user.user_type == "Teacher"):
+        pass
+    elif user.user_type != "Teacher":
+        raise serializers.ValidationError("You are not teacher")
+    else:
+        raise serializers.ValidationError("This subject already exists for this user.")
