@@ -9,7 +9,7 @@ from account.models import CustomUser
 class Teacher_Subject(models.Model):
     sub_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     subject = models.CharField(max_length=50, unique=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user_email = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.subject
