@@ -1,10 +1,7 @@
-from django.db.models import Q
-from django.shortcuts import render
-from rest_framework import generics, status, serializers
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from quize.models import Teacher_Subject, Question_Set,Question
+from quize.models import Teacher_Subject, Question_Set, Question
 from quize.serializers import TeacherSubjectSerializer, QuestionSetSerializer, QuestionSerializer
 
 
@@ -13,7 +10,7 @@ class TeacherSubjectList(generics.CreateAPIView):
     queryset = Teacher_Subject.objects.all()
     serializer_class = TeacherSubjectSerializer
 
-    def create_subject(self, request):
+    def add_subject(self, request):
         serializer = TeacherSubjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -32,6 +29,7 @@ class QuestionSetAPIView(generics.CreateAPIView):
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class AddQuestionAPIView(generics.CreateAPIView):
     queryset = Question.objects.all()
