@@ -1,17 +1,8 @@
-from django.db.models import Q
-from django.shortcuts import render
-from rest_framework import generics, status, serializers
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from quize.models import (Teacher_Subject,
-                          Question_Set,
-                          Question,
-                          Answer)
-from quize.serializers import (TeacherSubjectSerializer,
-                               QuestionSetSerializer,
-                               QuestionSerializer,
-                               AnswerSerializer)
+from quize.models import Teacher_Subject, Question_Set, Question
+from quize.serializers import TeacherSubjectSerializer, QuestionSetSerializer, QuestionSerializer
 
 
 # Create your views here.
@@ -38,6 +29,7 @@ class QuestionSetAPIView(generics.CreateAPIView):
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class AddQuestionAPIView(generics.CreateAPIView):
     queryset = Question.objects.all()
