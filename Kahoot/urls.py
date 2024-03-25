@@ -15,10 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 schema = get_schema_view(
     openapi.Info(
@@ -34,7 +36,16 @@ urlpatterns = [
     path('account/', include('account.urls'), name='account'),
     path("quize/",include('quize.urls'),name='quize'),
 
+    # account
+    path('login/', LoginView.as_view(), name="login"),
+    path('logout/', LogoutView.as_view(), name="logout"),
+
     # swagger
     path('swagger/', schema.with_ui('swagger'), name='schema-swagger-ui'),
     path('redoc/', schema.with_ui('redoc'), name='schema-redoc-ui'),
+
+    # jwt
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 ]
