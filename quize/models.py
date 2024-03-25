@@ -7,7 +7,7 @@ from account.models import CustomUser
 
 # Create your models here.
 class Teacher_Subject(models.Model):
-    sub_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    subject_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     subject = models.CharField(max_length=50)
     user_email = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
@@ -28,13 +28,15 @@ class Question_Set(models.Model):
         (OPTION4, 'Hard'),
     ]
     qs_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='Question_Sets')
+    user_email = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Teacher_Subject, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     level = models.CharField(
         max_length=10,
         choices=CHOICES,
         default=OPTION1)
     time_set = models.PositiveSmallIntegerField(default=5)
+    amount_set = models.PositiveSmallIntegerField(default=5)
     is_deleted = models.BooleanField(default=False)
 
 
@@ -55,7 +57,6 @@ class Question(models.Model):
         primary_key=True,
         default=uuid.uuid4,
         editable=False)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)

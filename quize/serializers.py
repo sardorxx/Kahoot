@@ -15,7 +15,6 @@ class TeacherSubjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-
         validate_unique_subject(data=data)
         return data
 
@@ -23,7 +22,7 @@ class TeacherSubjectSerializer(serializers.ModelSerializer):
 class QuestionSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question_Set
-        fields = '__all__'
+        fields = ['qs_id', 'level', 'user_email', 'subject', 'time_set', 'amount_set']
 
 
 class StudentResultSerializer(serializers.ModelSerializer):
@@ -35,7 +34,7 @@ class StudentResultSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ['text', 'qs_id', ]
 
 
 class AnswerSerializer(serializers.ModelSerializer):
