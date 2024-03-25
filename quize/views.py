@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from quize.models import Teacher_Subject, Question_Set, Question
+from quize.models import Teacher_Subject, Question_Set, Question, Answer
 from quize.serializers import TeacherSubjectSerializer, QuestionSetSerializer, QuestionSerializer
 
 
@@ -41,6 +41,7 @@ class AddQuestionAPIView(generics.CreateAPIView):
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class AddAnswerAPIView(generics.CreateAPIView):
     queryset = Answer.objects.filter()
