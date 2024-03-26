@@ -8,7 +8,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from account.internal import send_mail
 from rest_framework.authtoken.models import Token
-from .serializers import UserSerializer, LogoutSerializer, AddTeacherSerializer
+
+from .models import CustomUser
+from .serializers import UserSerializer, LogoutSerializer, AddTeacherSerializer, TeacherListSerializer
 
 
 class CustomLogoutView(generics.GenericAPIView):
@@ -102,3 +104,8 @@ class DeleteAccountView(APIView):
             user.save()
             return Response(data={'messages': 'Your account deleted successfully'}, status=status.HTTP_200_OK)
         return Response(data={'messages': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TeachersListView(generics.ListAPIView):
+    queryset = CustomUser.objects.filter(user_type="Teacher")
+    serializer_class = TeacherListSerializer

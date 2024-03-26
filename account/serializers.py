@@ -41,3 +41,8 @@ class AddTeacherSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['full_name', 'email', 'password', 'user_type']
 
+
+class TeacherListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['full_name', 'email', 'user_type']
