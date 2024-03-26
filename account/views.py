@@ -89,3 +89,16 @@ class EmailVerificationView(APIView):
             return Response(data={'message': 'Your email has been verified'}, status=status.HTTP_200_OK)
         return Response(data={'message': 'Something wants wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class DeleteAccountView(APIView):
+    permission_classes = ()
+
+    def delete(self, request):
+        email = request.data["email"]
+        password = request.data["password"]
+        user = authenticate(request, email=email, password=password)
+        if user:
+            user.is_active = False
+            user.save()
+            return Response(data={'messages': 'Your account deleted successfully'}, status=status.HTTP_200_OK)
+        return Response(data={'messages': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
