@@ -54,7 +54,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['full_name', 'user_type']
 
 
-
 class TeacherSettings(models.Model):
     teacher_settings_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

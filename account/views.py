@@ -1,10 +1,14 @@
+import string
+import random
+
 from django.contrib.auth import authenticate, logout
+from django.core.cache import cache
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from account.internal import send_mail
 from rest_framework.authtoken.models import Token
-from .serializers import UserSerializer, LogoutSerializer
+from .serializers import UserSerializer, LogoutSerializer, AddTeacherSerializer
 
 
 class CustomLogoutView(generics.GenericAPIView):
@@ -54,3 +58,34 @@ class CustomSignupView(APIView):
             }
             return Response(data=data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddTeacherView(APIView):
+    permission_classes = ()
+
+    def post(self, request):
+        serializer = AddTeacherSerializer(data=request.data)
+        if serializer.is_valid():
+            email = request.data['email']
+            confirmation_code = ''.join(random.choices(string.digits, k=6))
+            cache.set(email, confirmation_code, timeout=180)
+            msg = f'Your confirmation code is {confirmation_code}'
+            send_mail(email=email, message_user=msg)
+            serializer.save()
+            return Response(data={'message': "We are sent code to your email"}, status=status.HTTP_200_OK)
+        return Response(data={'message': 'Something wants wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EmailVerificationView(APIView):
+    permission_classes = ()
+
+    def post(self, request):
+        email = request.POST.get('email')
+        entered_code = request.POST.get('confirmation_code')
+        cached_code = cache.get(email)
+        if cached_code == entered_code:
+            cache.delete(email)
+
+            return Response(data={'message': 'Your email has been verified'}, status=status.HTTP_200_OK)
+        return Response(data={'message': 'Something wants wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
