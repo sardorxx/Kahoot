@@ -34,3 +34,10 @@ class LogoutSerializer(serializers.Serializer):
         else:
             msg = 'Must include "email" and "password".'
             raise serializers.ValidationError(msg)
+
+
+class AddTeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['full_name', 'email', 'password', 'user_type']
+
