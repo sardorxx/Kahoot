@@ -19,7 +19,7 @@ admin.site.register(Question_Set, QuestionSetAdmin)
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['text', 'created_date']
+    list_display = ['text']
 
 
 admin.site.register(Question, QuestionAdmin)
