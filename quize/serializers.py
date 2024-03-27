@@ -1,3 +1,5 @@
+import uuid
+
 from django.db.models import Q
 from rest_framework import serializers, status
 
@@ -31,13 +33,16 @@ class StudentResultSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class QuestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Question
-        fields = ['text', 'qs_id', ]
-
-
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
+        fields = ('id', 'text', 'is_correct')
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+
+    class Meta:
+        model = Question
         fields = '__all__'
+

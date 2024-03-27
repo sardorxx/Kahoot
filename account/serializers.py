@@ -10,6 +10,8 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
+        validated_data['is_active'] = False
+        validated_data['user_type'] = "Student"
         user = CustomUser.objects.create_user(**validated_data)
         return user
 
@@ -39,7 +41,14 @@ class LogoutSerializer(serializers.Serializer):
 class AddTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['full_name', 'email', 'password', 'user_type']
+        fields = ['id', 'user_type', 'full_name', 'email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        validated_data['user_type'] = 'Teacher'
+        validated_data['is_active'] = False
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
 
 
 class TeacherListSerializer(serializers.ModelSerializer):

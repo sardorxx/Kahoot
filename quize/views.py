@@ -8,11 +8,11 @@ from quize.serializers import TeacherSubjectSerializer, QuestionSetSerializer, Q
 
 
 # Create your views here.
-class TeacherSubjectList(generics.CreateAPIView):
+class TeacherSubjectList(APIView):
     queryset = Teacher_Subject.objects.all()
     serializer_class = TeacherSubjectSerializer
 
-    def add_subject(self, request):
+    def post(self, request):
         serializer = TeacherSubjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -21,11 +21,11 @@ class TeacherSubjectList(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class QuestionSetAPIView(generics.CreateAPIView):
+class QuestionSetAPIView(APIView):
     queryset = Question_Set.objects.all()
     serializer_class = QuestionSetSerializer
 
-    def add_question_set(self, request):
+    def post(self, request):
         serializer = QuestionSetSerializer(data=request.data, files=None)
         if serializer.is_valid():
             serializer.save()
@@ -33,11 +33,11 @@ class QuestionSetAPIView(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AddQuestionAPIView(generics.CreateAPIView):
+class AddQuestionAPIView(APIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
-    def add_question(self, request):
+    def post(self, request):
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -50,3 +50,29 @@ class QuestionSetListAPIView(generics.ListAPIView):
     serializer_class = QuestionSetSerializer
 
 
+class QuizViewSet(APIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    def post(self, request):
+        data = request.data
+        print(data)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    # def perform_create(self, serializer):
+    #     serializer.save()
+
+    # def create(self, request, *args, **kwargs):
+    #     data = request.data
+    #     serializer = self.get_serializer(data=data)
+    #     serializer.is_valid(raise_exception=True)
+    #
+    #     quiz = serializer.save()
+    #     data = data['questions']
+    #     question = Question(quiz=quiz, text=data['text'])
+    #     question.save()
+    #     for answer_data in data['answers']:
+    #         Answer.objects.create(question=question, text=answer_data['text'],
+    #                               is_correct=answer_data['is_correct', False])
+    #
+    #     return serializer.data
