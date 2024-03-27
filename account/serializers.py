@@ -6,7 +6,7 @@ from account.models import CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'user_type', 'full_name', 'email', 'password']
+        fields = ['full_name', 'email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -17,9 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LogoutSerializer(serializers.Serializer):
-    class Meta:
-        model = CustomUser
-        fields = "__all__"
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
     def validate(self, data):
         email = data.get('email')
@@ -41,7 +40,7 @@ class LogoutSerializer(serializers.Serializer):
 class AddTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'user_type', 'full_name', 'email', 'password']
+        fields = ['full_name', 'email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -55,3 +54,28 @@ class TeacherListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['full_name', 'email', 'user_type']
+        extra_kwargs = {'password': {'write_only': True}}
+
+
+class DeleteTeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['email']
+        extra_kwargs = {'password': {'write_only': True}}
+
+
+class DeleteAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+
+
+class EmailVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    confirmation_code = serializers.IntegerField()
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()

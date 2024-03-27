@@ -4,12 +4,12 @@ import random
 from django.contrib.auth import authenticate, logout
 from django.core.cache import cache
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from account.internal import send_mail
 from .models import CustomUser
-from .serializers import UserSerializer, LogoutSerializer, AddTeacherSerializer, TeacherListSerializer
+from .serializers import UserSerializer, LogoutSerializer, AddTeacherSerializer, TeacherListSerializer, \
+    DeleteTeacherSerializer, DeleteAccountSerializer, EmailVerificationSerializer, LoginSerializer
 
 
 class CustomLogoutView(generics.GenericAPIView):
@@ -27,13 +27,12 @@ class CustomLogoutView(generics.GenericAPIView):
 
 
 class CustomLoginView(APIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = LoginSerializer
+
     def post(self, request):
-        email = request.data["email"]
-        password = request.data["password"]
-        print(request.data)
-        user = authenticate(request, email=email, password=password)
-        print(user)
-        if user:
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
             data = {
                 'message': 'You have successfully logged in.'
             }
@@ -43,6 +42,8 @@ class CustomLoginView(APIView):
 
 class CustomSignupView(APIView):
     permission_classes = ()
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -63,9 +64,11 @@ class CustomSignupView(APIView):
 
 class AddTeacherView(APIView):
     permission_classes = ()
+    queryset = CustomUser.objects.all()
+    serializer_class = AddTeacherSerializer
 
     def post(self, request):
-        serializer = AddTeacherSerializer(data=request.data, context={'user_type_teacher': 'Teacher'})
+        serializer = AddTeacherSerializer(data=request.data)
         if serializer.is_valid():
             email = request.data['email']
             confirmation_code = ''.join(random.choices(string.digits, k=6))
@@ -79,6 +82,8 @@ class AddTeacherView(APIView):
 
 class EmailVerificationView(APIView):
     permission_classes = ()
+    queryset = CustomUser.objects.all()
+    serializer_class = EmailVerificationSerializer
 
     def post(self, request):
         email = request.POST.get('email')
@@ -99,8 +104,10 @@ class EmailVerificationView(APIView):
 
 class DeleteAccountView(APIView):
     permission_classes = ()
+    queryset = CustomUser.objects.all()
+    serializer_class = DeleteAccountSerializer
 
-    def delete(self, request):
+    def post(self, request):
         email = request.data["email"]
         password = request.data["password"]
         user = authenticate(request, email=email, password=password)
@@ -116,4 +123,15 @@ class TeachersListView(generics.ListAPIView):
     serializer_class = TeacherListSerializer
 
 
+class DeleteTeacherView(APIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = DeleteTeacherSerializer
 
+    def post(self, request):
+        email = request.data["email"]
+        user = CustomUser.objects.get(email=email, user_type="Teacher")
+        if user:
+            user.is_active = False
+            user.save()
+            return Response(data={'messages': 'Your account deleted successfully'}, status=status.HTTP_200_OK)
+        return Response(data={'messages': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
