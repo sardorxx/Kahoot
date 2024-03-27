@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+#    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn Kahoot.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  db:
+    image: sqlite3
+
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_folder:/app/static
+    ports:
+      - 8000:80
+    depends_on:
+      - web
+
+volumes:
+
+  static_folder:
+  media_folder:

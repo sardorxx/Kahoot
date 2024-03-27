@@ -1,6 +1,6 @@
 from django.urls import path
 from account.views import (CustomLoginView, CustomSignupView, CustomLogoutView, AddTeacherView,
-                           EmailVerificationView, DeleteAccountView, TeachersListView)
+                           EmailVerificationView, DeleteAccountView, TeachersListView, DeleteTeacherView)
 
 urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('emailverification/', EmailVerificationView.as_view(), name='email-verification'),
     path('delete_account/', DeleteAccountView.as_view(), name='delete-account'),
     path('get_teachers_list/', TeachersListView.as_view(), name='teachers-list'),
+    path('delete_teacher/', DeleteTeacherView.as_view(), name='delete-teachers')
 ]

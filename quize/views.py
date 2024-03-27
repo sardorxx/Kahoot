@@ -1,5 +1,6 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import generics, status, viewsets
+import uuid
+
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -7,7 +8,6 @@ from quize.models import Teacher_Subject, Question_Set, Question, Answer
 from quize.serializers import TeacherSubjectSerializer, QuestionSetSerializer, QuestionSerializer
 
 
-# Create your views here.
 class TeacherSubjectList(APIView):
     queryset = Teacher_Subject.objects.all()
     serializer_class = TeacherSubjectSerializer
@@ -56,23 +56,10 @@ class QuizViewSet(APIView):
 
     def post(self, request):
         data = request.data
-        print(data)
-        return Response(data=data, status=status.HTTP_200_OK)
-
-    # def perform_create(self, serializer):
-    #     serializer.save()
-
-    # def create(self, request, *args, **kwargs):
-    #     data = request.data
-    #     serializer = self.get_serializer(data=data)
-    #     serializer.is_valid(raise_exception=True)
-    #
-    #     quiz = serializer.save()
-    #     data = data['questions']
-    #     question = Question(quiz=quiz, text=data['text'])
-    #     question.save()
-    #     for answer_data in data['answers']:
-    #         Answer.objects.create(question=question, text=answer_data['text'],
-    #                               is_correct=answer_data['is_correct', False])
-    #
-    #     return serializer.data
+        qs = Question_Set.objects.first()
+        q_id = uuid.uuid4()
+        ques = Question.objects.create(question_id=q_id, text=data['questions'], qs_id=qs)
+        for i in data['answers']:
+            Answer.objects.create(question_id=ques, text=i['text'], is_correct=i['is_correct'])
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
